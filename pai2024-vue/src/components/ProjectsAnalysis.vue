@@ -2,7 +2,7 @@
   <g-gantt-chart
       :chart-start="start"
       :chart-end="end"
-      precision="day"
+      precision="month"
       bar-start="beginDate"
       bar-end="endDate"
       row-height="60"

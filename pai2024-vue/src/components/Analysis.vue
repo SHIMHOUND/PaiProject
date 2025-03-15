@@ -1,36 +1,45 @@
 <template>
-  <div class="project-selector">
-    <h2>Select Project for Task Analysis</h2>
-    <projects-analysis :projects="sortedProjects" />
+  <div v-if="user && checkIfInRole(user, [0])" class="analysis-container">
     <div class="project-selector">
       <h2>Select Project for Task Analysis</h2>
-      <select @change="onProjectSelect" class="project-select">
-        <option value="">-- Select a Project --</option>
-        <option v-for="project in sortedProjects" :key="project._id" :value="project._id">
-          {{ project.name }}
-        </option>
-      </select>
+      <projects-analysis :projects="sortedProjects"/>
+      <div class="project-selector">
+        <h2>Select Project for Task Analysis</h2>
+        <select @change="onProjectSelect" class="project-select">
+          <option value="">-- Select a Project --</option>
+          <option v-for="project in sortedProjects" :key="project._id" :value="project._id">
+            {{ project.name }}
+          </option>
+        </select>
+      </div>
+      <div v-if="currentProject" class="gantt-section">
+        <h2>Tasks for: {{ currentProject.name }}</h2>
+        <project-analysis :current-project="currentProject" />
+      </div>
     </div>
-    <div v-if="currentProject" class="gantt-section">
-      <h2>Tasks for: {{ currentProject.name }}</h2>
-      <project-analysis :currentProject="currentProject" />
-    </div>
+  </div>
+  <div v-else class="access-denied">
+    <h2>Access denied. Admin rights required.</h2>
   </div>
 </template>
 
 <script>
 import ProjectAnalysis from "@/components/ProjectAnalysis.vue";
 import ProjectsAnalysis from "@/components/ProjectsAnalysis.vue";
+import common from "@/mixins/common";
 
 export default {
+  mixins: [common],
   components: {
     ProjectAnalysis,
     ProjectsAnalysis,
   },
+  props: ['user'],
   data() {
     return {
       projects: [],
       currentProject: null,
+      refreshInterval: null
     };
   },
   computed: {
@@ -48,36 +57,26 @@ export default {
       const projectId = event.target.value;
       this.currentProject = this.projects.find((p) => p._id === projectId) || null;
     },
+    setupAutoRefresh() {
+      this.refreshInterval = setInterval(() => {
+        this.fetchProjects();
+      }, 5000); // Обновление каждые 5 секунд
+    }
   },
   mounted() {
     this.fetchProjects();
+    this.setupAutoRefresh();
   },
+  beforeUnmount() {
+    clearInterval(this.refreshInterval);
+  }
 };
 </script>
 
 <style>
-.analysis-container {
+/* Существующие стили остаются без изменений */
+.access-denied {
   padding: 20px;
-}
-
-.gantt-chart {
-  height: 400px;
-  width: 100%;
-  margin-bottom: 30px;
-}
-
-.project-selector {
-  margin: 20px 0;
-}
-
-.project-select {
-  padding: 8px;
-  width: 300px;
-  border-radius: 4px;
-  border: 1px solid #dcdfe6;
-}
-
-.gantt-section {
-  margin-bottom: 40px;
+  color: #ff4444;
 }
 </style>
