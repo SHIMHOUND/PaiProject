@@ -4,6 +4,7 @@ import '@mdi/font/css/materialdesignicons.css'
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router' // Vue Router v4
 import { use } from 'echarts/core'
+import ganttastic from '@infectoone/vue-ganttastic'
 
 // Vuetify
 import 'vuetify/styles'
@@ -92,4 +93,4 @@ const vuetify = createVuetify({
 })
 
 
-createApp(App).use(vuetify).use(router).mount('#app')
+createApp(App).use(vuetify).use(ganttastic).use(router).mount('#app')
