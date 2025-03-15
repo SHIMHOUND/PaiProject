@@ -51,4 +51,25 @@ const start = computed(() =>
 const end = computed(() =>
     lastProject?.value?.endDate ? useDateFormat(lastProject.value.endDate, 'YYYY-MM-DD HH:mm').value : null
 );
+// const precision = computed(() => {
+//   if (!props.projects || props.projects.length === 0) return 'month'; // Значение по умолчанию
+//
+//   // Находим максимальную длительность проекта
+//   const maxDuration = Math.max(
+//       ...props.projects.map(project => {
+//         const start = dayjs(project.startDate);
+//         const end = project.endDate ? dayjs(project.endDate) : start.add(1, 'day');
+//         return end.diff(start, 'day'); // Длительность в днях
+//       })
+//   );
+//
+//   // Определяем precision на основе длительности
+//   if (maxDuration <= 1) {
+//     return 'day'; // Если проект длится меньше или равно 1 дню
+//   } else if (maxDuration <= 365) {
+//     return 'month'; // Если проект длится меньше или равно 1 году
+//   } else {
+//     return 'year'; // Если проект длится больше 1 года
+//   }
+// });
 </script>

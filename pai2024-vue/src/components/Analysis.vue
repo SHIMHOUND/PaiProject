@@ -40,6 +40,7 @@ export default {
       projects: [],
       currentProject: null,
       refreshInterval: null
+
     };
   },
   computed: {
